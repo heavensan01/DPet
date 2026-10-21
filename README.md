@@ -1,77 +1,61 @@
-# DPET - Pixel Hamster Desktop Pet (Windows)
+# 🐹 DPet – Pixel Hamster Desktop Pet
 
-Built from your hamster character sheet, speech-bubble sticker sheet, and the walking,
-eating, wheel and water-bottle animation sheets.
+A tiny pixel-art hamster that lives on your Windows desktop. It walks around, eats, naps,
+jumps, runs on its spinning wheel and drinks from its water bottle, and it reminds you to
+drink water and take breaks.
 
-## First time
-1. Install Python 3.10+ (tick "Add Python to PATH").
-2. Double-click **1 SETUP (first time only).bat** (downloads PySide6, ~80 MB, long timeout).
+![DPet hamster](screenshots/hamster.png)
 
-## Every day (no VS Code needed)
-- **2 START DPET.bat**  - starts the hamster in the background. Closing VS Code
-  or any window does NOT stop it.
-- **3 STOP DPET.bat**   - stops it. (Or right-click the hamster > Quit, or tray icon > Quit.)
-- **4 AUTO-START with Windows (optional).bat** - starts it every time you log in.
-  **5 REMOVE auto-start.bat** undoes that.
+## Features
+- **Pixel-art animations:** 4-frame walk cycle, eating, sitting, napping (Zzz) and jumping
+- **Spinning wheel:** the hamster climbs in, the wheel spins up while it runs, then it steps out
+- **Water bottle:** the nozzle turns toward the screen centre, and the hamster reaches up and drinks
+- **Small speech bubble** above its head for every message
+- **Reminders:** water, study breaks and bedtime
+- **Drag and drop:** move the hamster, wheel and bottle anywhere along the bottom of the screen
+- **Right-click menu:** feed, go run, go drink, refill water, resize, quit
 
-Starting it twice is safe: the second copy exits silently.
-Errors (if any) are written to `dpet.log`.
+## Screenshots
+| Hamster | Wheel | Water bottle |
+|---|---|---|
+| ![Hamster](screenshots/hamster.png) | ![Wheel](screenshots/wheel.png) | ![Water bottle](screenshots/water.png) |
 
-## What the hamster does
-- Walks with a 4-frame walk cycle on four tiny paws, then every 40-100 s does one
-  activity: sits and looks around, eats, or naps (Zzz). Jumps now and then.
-- Eating follows the 8-frame sheet: notices food > sniffs > picks up > bites > chews >
-  pauses > licks paws > done (happy heart).
-- Click: happy face. Drag: move it. Right-click: menu.
+## Download (Windows)
+Get **`DPet-Setup.exe`** from the [Releases page](../../releases/latest) and run it.
+`DPet-portable.zip` is the no-install version.
 
-## Spinning wheel and water bottle
-Both appear near the bottom-right corner by default (right-click the hamster >
-**Spinning wheel** / **Water bottle** to show or hide them).
-- **Drag and drop** either one anywhere. It drops to the floor (the bottle hangs at the
-  right height). A moment after you put one down, the hamster walks over to try it.
-- **It uses them by itself:** every 3-6 minutes it runs on the wheel and every 5-9 minutes
-  it goes to drink (change in `config.json`). The 45-minute water reminder also sends it
-  to the bottle.
-- **Wheel:** walks over, climbs in, the wheel spins up while it runs, slows down, and the
-  hamster steps out (exit animation). If the wheel is against a screen edge it turns
-  round and leaves the other way.
-- **Bottle:** the hamster reaches up, grabs the nozzle and drinks (bubbles); the water
-  level falls a little each time. When it is empty use **Refill water**.
-- **Commands:** right-click > **Go run on the wheel** / **Go drink water** (also in the tray
-  menu). If it is busy it finishes the current move first - e.g. it climbs out of the wheel,
-  then walks to the bottle - and the same the other way round.
-- Positions and water level are remembered in `config.json`.
+> Windows may show a "Windows protected your PC" box because the app is not code-signed.
+> Click **More info → Run anyway**.
 
-## If the terminal opens and closes
-1. Extract the zip fully first (do not run files from inside the zip).
-2. Run **1 SETUP (first time only).bat** on that computer and wait for "Setup finished".
-   (Never copy a `.venv` folder between computers; SETUP rebuilds it.)
-3. Then run **2 START DPET.bat**.
-4. Still not working? Run **DEBUG (shows errors).bat** and send a screenshot.
+## How to use
+- **Click** the hamster: happy face. **Drag:** move it. **Right-click:** menu.
+- Right-click → **Go run on the wheel** or **Go drink water** to send it there now.
+- It also goes by itself: to the wheel every 3–6 minutes and to the bottle every 5–9 minutes.
+- When the bottle is empty, use **Refill water**.
+- Settings are saved in `%APPDATA%\DPet\config.json`.
 
-## Settings: config.json
-- `scale` 1.25 tiny / 1.5 small (default) / 2 medium / 3 large (also in right-click > Size)
-- `speed` walking speed
-- `activity_gap_seconds` [min, max] walking time between activities
-- `jump_gap_seconds` [min, max]
-- `wheel_gap_minutes` [min, max] how often it goes to the wheel by itself
-- `drink_gap_minutes` [min, max] how often it goes to drink by itself
-- `wheel_run_seconds` [min, max] how long it runs on the wheel
-- `wheel_on`, `bottle_on` show/hide the props; `wheel_x`, `bottle_x` saved positions
-  (null = bottom-right corner); `water_level` 0-1
-- `water_minutes`, `study_minutes`, `sleep_time`
+## Run from source
+```
+pip install -r requirements.txt
+python main.py
+```
+Needs Python 3.10+.
 
-## Rebuilding sprites
-- `python tools/make_props.py climb.png wheel.png bottle.png drink.png exit.png`
-  (sheets are in `reference/`) rebuilds the wheel / bottle sprites and the climbing,
-  exit and drinking frames.
-- `python tools/make_walk.py walk_sheet.png`, `python tools/make_eat.py eating_sheet.png`,
-  `python tools/make_sprites.py Hamster_Pixel-Art_Character_Sheet.png` rebuild the rest.
-  (They need pillow, numpy, scipy.)
-
-## Build as a real desktop app (Windows)
+## Build the app yourself
 Double-click `BUILD DESKTOP APP.bat` (needs Python only for building).
-- `dist\DPet\DPet.exe` - the standalone app (copy the whole `DPet` folder anywhere).
-- Install Inno Setup 6 first and the same file also makes `installer_output\DPet-Setup.exe`
-  (Start Menu + desktop shortcut, optional start with Windows, uninstaller).
-Installed copies keep their settings in `%APPDATA%\DPet`.
+- `dist\DPet\DPet.exe` – the standalone app
+- With [Inno Setup 6](https://jrsoftware.org/isdl.php) installed, the same file also makes
+  `installer_output\DPet-Setup.exe`.
+
+Pushing a tag such as `v1.0` also builds the installer automatically with GitHub Actions.
+
+## Settings (`config.json`)
+- `scale`: 1.25 tiny / 1.5 small (default) / 2 medium / 3 large
+- `speed`: walking speed
+- `activity_gap_seconds`, `jump_gap_seconds`: time between activities and jumps
+- `wheel_gap_minutes`, `drink_gap_minutes`, `wheel_run_seconds`: how often and how long
+- `wheel_on`, `bottle_on`: show or hide the props
+- `water_minutes`, `study_minutes`, `sleep_time`: reminders
+
+## Built with
+Python · PySide6 (Qt) · PyInstaller · Inno Setup · GitHub Actions
