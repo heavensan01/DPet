@@ -1,0 +1,48 @@
+name: Build Windows app
+
+on:
+  push:
+    tags: ["v*"]          # e.g. git tag v1.0 && git push origin v1.0  -> builds + publishes a Release
+  workflow_dispatch:       # or run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Build DPet.exe
+        run: pyinstaller DPet.spec --noconfirm
+
+      - name: Build installer (Inno Setup is preinstalled on this runner)
+        run: iscc packaging\installer.iss
+
+      - name: Zip portable copy
+        run: Compress-Archive -Path dist\DPet -DestinationPath DPet-portable.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DPet-windows
+          path: |
+            installer_output/DPet-Setup.exe
+            DPet-portable.zip
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            installer_output/DPet-Setup.exe
+            DPet-portable.zip
